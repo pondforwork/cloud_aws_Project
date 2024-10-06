@@ -9,5 +9,6 @@ Route::get('/', function () {
 
 Route::get('/student', [studentcontroller::class, 'index']);
 Route::get('/student/list', [studentcontroller::class, 'getList']);
+Route::post('/student/save', [studentcontroller::class, 'saveData']);
 
 

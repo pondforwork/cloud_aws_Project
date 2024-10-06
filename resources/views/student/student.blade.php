@@ -76,8 +76,6 @@
     </style>
     <script>
         $(document).ready(function() {
-
-
             function fetchLocations() {
                 $.ajaxSetup({
                     headers: {
@@ -88,7 +86,6 @@
                     url: "{{ url('/student/list') }}",
                     method: 'GET',
                     success: function(data) {
-
                         console.log(data);
                         let tableBody = $('#locationTable tbody');
                         tableBody.empty();
@@ -101,7 +98,6 @@
                             <td class="text-center">${counter.age}</td>
                             <td class="text-center">${counter.year}</td>
                             <td class="text-center">${counter.sex}</td>
-
                         </tr>
                     `);
                         });
@@ -112,7 +108,45 @@
                 });
             }
 
+            function saveStudentData() {
+                console.log("Save");
+                // Get form values
+                const name = document.getElementById('student_name').value;
+                const surname = document.getElementById('student_surname').value;
+                const age = document.getElementById('student_age').value;
+                const year = document.getElementById('student_year').value;
+                const gender = document.getElementById('student_gender').value;
 
+                // Create an object with the data
+                const studentData = {
+                    name: name,
+                    surname: surname,
+                    age: age,
+                    year: year,
+                    sex: gender,
+                };
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    url: '/student/save',
+                    method: 'POST',
+                    data: studentData,
+                    success: function(response) {
+                        console.log('Success:', response);
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        console.error('Error:', xhr.responseText);
+                    }
+                });
+
+            }
+
+            document.getElementById('saveButton').addEventListener('click', saveStudentData);
 
             fetchLocations()
         });
@@ -160,7 +194,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="text-center">
-                    <h2>เพิ่มเคาน์เตอร์บริการ</h2>
+                    <h2>เพิ่มนักเรียน</h2>
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center" id="loadingSaveContainer"
@@ -172,8 +206,21 @@
 
                 <form id="counterForm">
                     <div class="mb-3">
-                        <label for="counter_name" class="form-label">ชื่อเคาน์เตอร์บริการ</label>
-                        <input type="text" class="form-control" id="counter_name">
+                        <label for="student_name" class="form-label">ชื่อ</label>
+                        <input type="text" class="form-control" id="student_name">
+
+                        <label for="student_surname" class="form-label">สกุล</label>
+                        <input type="text" class="form-control" id="student_surname">
+
+                        <label for="student_age" class="form-label">อายุ</label>
+                        <input type="text" class="form-control" id="student_age">
+
+                        <label for="student_year" class="form-label">รหัสชั้นปี</label>
+                        <input type="text" class="form-control" id="student_year">
+
+                        <label for="student_gender" class="form-label">เพศ</label>
+                        <input type="text" class="form-control" id="student_gender">
+
                     </div>
                     <div class="row">
                         <div class="col-md-6">
